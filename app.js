@@ -388,6 +388,54 @@ document.addEventListener("DOMContentLoaded", () => {
             link.click();
         }, 300);
     };
+
+    // --- INTERACTIVE WORD CLOUD CONTROLLER ---
+    window.addNewWord = function() {
+        const wordInput = document.getElementById("word-input");
+        if (!wordInput) return;
+        const wordText = wordInput.value.trim();
+        if (!wordText) return;
+        
+        const container = document.getElementById("word-cloud-container");
+        if (!container) return;
+        
+        const newWordSpan = document.createElement("span");
+        
+        // Curated set of neon highlight colors for modern aesthetic
+        const colors = ["var(--primary)", "var(--secondary)", "var(--accent)", "var(--forest-green)", "#e2eafc", "#b5e2fa", "#ffc6ff", "#bdb2ff"];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        const randomFontSize = (0.9 + Math.random() * 0.8).toFixed(2) + "rem";
+        
+        // Boundary aware random float positions
+        const randomTop = Math.floor(12 + Math.random() * 72) + "%";
+        const randomLeft = Math.floor(6 + Math.random() * 75) + "%";
+        
+        newWordSpan.className = "cloud-word";
+        newWordSpan.style.color = randomColor;
+        newWordSpan.style.fontSize = randomFontSize;
+        newWordSpan.style.top = randomTop;
+        newWordSpan.style.left = randomLeft;
+        newWordSpan.style.animationDelay = (Math.random() * 3.5).toFixed(2) + "s";
+        newWordSpan.textContent = wordText;
+        
+        container.appendChild(newWordSpan);
+        wordInput.value = "";
+        
+        // Synthesis a soft popping bubble sound
+        playSynthSound(680, "sine", 0.07);
+    };
+
+    // Event listener for pressing Enter inside the input box
+    setTimeout(() => {
+        const wordInput = document.getElementById("word-input");
+        if (wordInput) {
+            wordInput.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    addNewWord();
+                }
+            });
+        }
+    }, 500);
     
     updateSlides();
 });

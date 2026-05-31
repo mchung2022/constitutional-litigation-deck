@@ -880,6 +880,92 @@ ul.premium-list li::before {
     border-radius: 3px;
 }
 
+/* --- INTERACTIVE WORD CLOUD STYLING --- */
+.word-cloud-wrapper {
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.word-cloud-container {
+    flex-grow: 1;
+    position: relative;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    min-height: 210px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.cloud-word {
+    position: absolute;
+    font-weight: 700;
+    white-space: nowrap;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+    cursor: default;
+    transition: all 0.3s;
+    animation: float-word 6s ease-in-out infinite;
+}
+
+.cloud-word:hover {
+    transform: scale(1.25);
+    z-index: 100;
+}
+
+@keyframes float-word {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(1.5deg); }
+}
+
+.cloud-word.w1 { animation-delay: 0s; }
+.cloud-word.w2 { animation-delay: 1.5s; }
+.cloud-word.w3 { animation-delay: 3s; }
+.cloud-word.w4 { animation-delay: 0.5s; }
+.cloud-word.w5 { animation-delay: 2s; }
+.cloud-word.w6 { animation-delay: 1s; }
+.cloud-word.w7 { animation-delay: 2.5s; }
+
+.word-cloud-input-group {
+    display: flex;
+    gap: 8px;
+}
+
+.word-cloud-input-group input {
+    flex-grow: 1;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--glass-border);
+    background: rgba(0,0,0,0.3);
+    color: var(--text-light);
+    font-size: 0.88rem;
+}
+
+.word-cloud-input-group input:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+.word-cloud-input-group button {
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    background: var(--primary);
+    color: #0b132b;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.word-cloud-input-group button:hover {
+    background: #00b4d8;
+    transform: translateY(-1px);
+}
+
 /* ==========================================================================
    Responsive Design & Media Queries
    ========================================================================== */

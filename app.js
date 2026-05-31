@@ -12,6 +12,76 @@ document.addEventListener("DOMContentLoaded", () => {
     const menuToggle = document.querySelector(".menu-toggle-btn");
     const sideNav = document.getElementById("side-nav-overlay");
     const navItems = document.querySelectorAll(".units-navigation-list li");
+
+    // --- SYNTHESIZE SOUND DYNAMICALLY WITH WEB AUDIO API ---
+    let soundEnabled = true;
+    const soundToggle = document.getElementById("sound-toggle-btn");
+    
+    soundToggle.addEventListener("click", () => {
+        soundEnabled = !soundEnabled;
+        soundToggle.textContent = soundEnabled ? "🔊" : "🔇";
+        playSynthSound(600, "sine", 0.05);
+    });
+
+    function playSynthSound(frequency, type = "sine", duration = 0.1) {
+        if (!soundEnabled) return;
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            const ctx = new AudioContext();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            osc.type = type;
+            osc.frequency.setValueAtTime(frequency, ctx.currentTime);
+            
+            gain.gain.setValueAtTime(0.12, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            osc.start();
+            osc.stop(ctx.currentTime + duration);
+        } catch (e) {
+            console.log("Audio block active");
+        }
+    }
+
+    // --- THEME SWITCHER LOGIC ---
+    const themeToggle = document.getElementById("theme-toggle-btn");
+    themeToggle.addEventListener("click", () => {
+        document.documentElement.classList.toggle("light-theme");
+        playSynthSound(440, "triangle", 0.08);
+    });
+
+    // --- MOBILE TOUCH SWIPE SUPPORT ---
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const viewport = document.getElementById("slides-viewport");
+    
+    viewport.addEventListener("touchstart", (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    
+    viewport.addEventListener("touchend", (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipeGesture();
+    }, { passive: true });
+    
+    function handleSwipeGesture() {
+        const threshold = 60;
+        if (touchEndX < touchStartX - threshold) {
+            nextSlide();
+        } else if (touchEndX > touchStartX + threshold) {
+            prevSlide();
+        }
+    }
+
+    // --- SCOREBOARD VARIABLES ---
+    let totalQuestionsAnswered = 0;
+    let correctAnswersCount = 0;
+    const answeredQuizzes = new Set();
     
     // Update Slide Viewport
     function updateSlides() {
@@ -61,6 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (currentSlideIndex > 0) {
             currentSlideIndex--;
             updateSlides();
+            playSynthSound(280, "triangle", 0.08);
         }
     };
     
@@ -68,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (currentSlideIndex < totalSlides - 1) {
             currentSlideIndex++;
             updateSlides();
+            playSynthSound(320, "triangle", 0.08);
         }
     };
     
@@ -88,6 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
     menuToggle.addEventListener("click", () => {
         sideNav.classList.toggle("open");
         menuToggle.textContent = sideNav.classList.contains("open") ? "✕ 關閉目錄" : "☰ 課程地圖";
+        playSynthSound(400, "sine", 0.05);
     });
     
     // Click on nav items to navigate to first slide of that unit
@@ -98,6 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
             updateSlides();
             sideNav.classList.remove("open");
             menuToggle.textContent = "☰ 課程地圖";
+            playSynthSound(350, "sine", 0.06);
         });
     });
     
@@ -106,6 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
     flipCards.forEach(card => {
         card.addEventListener("click", () => {
             card.classList.toggle("flipped");
+            playSynthSound(520, "sine", 0.08);
         });
     });
     
@@ -133,6 +208,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 b.style.opacity = "0.5";
             }
         });
+
+        // Gamified Scoreboard updates and custom feedback audio
+        if (!answeredQuizzes.has(feedbackId)) {
+            answeredQuizzes.add(feedbackId);
+            totalQuestionsAnswered++;
+            if (isCorrect) {
+                correctAnswersCount++;
+                playSynthSound(880, "sine", 0.12);
+                setTimeout(() => playSynthSound(1109.73, "sine", 0.18), 100); // 880Hz -> 1109Hz chime chord
+            } else {
+                playSynthSound(150, "sawtooth", 0.3); // low flat buzz
+            }
+            const scoreDisplay = document.getElementById("score-count");
+            if (scoreDisplay) {
+                scoreDisplay.textContent = `${correctAnswersCount} / ${totalQuestionsAnswered}`;
+            }
+        }
     };
     
     // --- JUSTICES VOTE SIMULATION LOGIC ---
@@ -160,6 +252,10 @@ document.addEventListener("DOMContentLoaded", () => {
             constitutionalVotes = 5;
             unconstitutionalVotes = 10;
         }
+        
+        // Play thematic twice-hitting "Gavel" sound effect
+        playSynthSound(220, "sawtooth", 0.08);
+        setTimeout(() => playSynthSound(180, "sawtooth", 0.12), 120);
         
         const totalVotes = 15;
         const conPercent = Math.round((constitutionalVotes / totalVotes) * 100);

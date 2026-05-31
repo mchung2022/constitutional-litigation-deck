@@ -13,6 +13,7 @@
             <div class="logo">⚖️ 憲法訴訟法 <span>素養講義</span></div>
             <div class="header-controls">
                 <div class="scoreboard-widget" id="scoreboard" title="素養挑戰回答進度">⭐ 答題: <span id="score-count">0 / 3</span></div>
+                <div class="scoreboard-widget" id="session-code-display" style="display: none; background: rgba(72, 202, 228, 0.12); border-color: var(--primary); color: var(--primary);" title="課堂同步連接碼">🔑 連接碼: <span id="session-code-span" style="font-family: monospace; color: white;">...</span></div>
                 <button class="icon-control-btn" id="theme-toggle-btn" title="切換明暗主題">🌓</button>
                 <button class="icon-control-btn" id="sound-toggle-btn" title="切換音效模式">🔊</button>
                 <button class="menu-toggle-btn" onclick="openQRModal()" style="border-color: var(--secondary); color: var(--secondary); margin-right: 5px;">📱 課堂掃碼</button>
@@ -42,7 +43,7 @@
                         </div>
                         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); padding: 25px; border-radius: 20px; box-shadow: var(--shadow);">
                             <p style="font-size: 0.95rem; font-weight: 700; color: var(--secondary); margin-bottom: 12px; text-align: center;">📱 課堂互動！手機掃碼同步共讀：</p>
-                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6AQMAAACyIsh+AAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB+UlEQVRogeWZsa3DMAxEaaRw6REyikeTRvMoHiGlC8MM7ygp/h8fSP1JdRKeG+aORyki31ZRrEOWl23WiqPHOdue51qjADw6Zn09eaDYqr6WnUVIBKieDxZmXzfW7ZQZgH1QowGogwGFZTAiKyBiJ9uqKu6HeIDLHjq3OlTVq29/+iI64G2QAtjWWuSaTgK/+uQ/B27rqcP+h/y1IgM8eaAmMAIKM7ErejeoUQDa3dLcw93sP0EeoxvUNIDQ76gM5FB1uro61AsVA7ATDG8I9y5yaVsf7XIAHuduBN95GxT4QsIA0IMNLdS5YoYxdWgPtdJknwDwcPdZfbU9fIGtGQM2kSgAZY9hnaE2mh5M0GSfA4Ae1IfYDZViF5wd90qGADCj8oTL5DEx1GzhwlLTAKgMrzAKOYj6kPNJvUAA1xMpVqwMHmqc5CUNYL+/+0LuqScyfBEDgOwZalQAb2rt4nbzRQZAGHqf1EOhmHrS7jhBgKnfUO4XUoTaqu6LLMDVhhx/j7r80VXZFUsNArQ1twtKRaidM2e50SAyABAA/N4qM3yx9PeKIACq0B7VGWr8wOtwf2WND7RHdQqiVBSK8lA2g3gABeD/FHFkHUNONgCvbqqjK0p7wQgCSGvvO9saZc9Zbu+hlgOg2/ufC+rvMHr4jabUNMC39QZ5iaiJIVOR3wAAAABJRU5ErkJggg==" alt="Slide QR Code" style="border: 4px solid var(--primary); border-radius: 16px; width: 150px; height: 150px; box-shadow: 0 4px 20px rgba(72,202,228,0.3); background: #fff;">
+                            <img id="slide-1-qr-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6AQMAAACyIsh+AAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB+UlEQVRogeWZsa3DMAxEaaRw6REyikeTRvMoHiGlC8MM7ygp/h8fSP1JdRKeG+aORyki31ZRrEOWl23WiqPHOdue51qjADw6Zn09eaDYqr6WnUVIBKieDxZmXzfW7ZQZgH1QowGogwGFZTAiKyBiJ9uqKu6HeIDLHjq3OlTVq29/+iI64G2QAtjWWuSaTgK/+uQ/B27rqcP+h/y1IgM8eaAmMAIKM7ErejeoUQDa3dLcw93sP0EeoxvUNIDQ76gM5FB1uro61AsVA7ATDG8I9y5yaVsf7XIAHuduBN95GxT4QsIA0IMNLdS5YoYxdWgPtdJknwDwcPdZfbU9fIGtGQM2kSgAZY9hnaE2mh5M0GSfA4Ae1IfYDZViF5wd90qGADCj8oTL5DEx1GzhwlLTAKgMrzAKOYj6kPNJvUAA1xMpVqwMHmqc5CUNYL+/+0LuqScyfBEDgOwZalQAb2rt4nbzRQZAGHqf1EOhmHrS7jhBgKnfUO4XUoTaqu6LLMDVhhx/j7r80VXZFUsNArQ1twtKRaidM2e50SAyABAA/N4qM3yx9PeKIACq0B7VGWr8wOtwf2WND7RHdQqiVBSK8lA2g3gABeD/FHFkHUNONgCvbqqjK0p7wQgCSGvvO9saZc9Zbu+hlgOg2/ufC+rvMHr4jabUNMC39QZ5iaiJIVOR3wAAAABJRU5ErkJggg==" alt="Slide QR Code" style="border: 4px solid var(--primary); border-radius: 16px; width: 150px; height: 150px; box-shadow: 0 4px 20px rgba(72,202,228,0.3); background: #fff;">
                             <p style="font-size: 0.8rem; color: var(--text-gray); margin-top: 10px; text-align: center;">掃碼即可用手機投票、參與文字雲與獲取證書</p>
                         </div>
                     </div>
@@ -1341,11 +1342,19 @@
                                     2. **司法哲學**：大法官應扮演「積極主義」還是「克制主義」？
                                 </p>
                             </div>
-                            <div style="margin-top: 10px; display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 12px; border: 1px solid var(--glass-border);">
-                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6AQMAAACyIsh+AAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB+UlEQVRogeWZsa3DMAxEaaRw6REyikeTRvMoHiGlC8MM7ygp/h8fSP1JdRKeG+aORyki31ZRrEOWl23WiqPHOdue51qjADw6Zn09eaDYqr6WnUVIBKieDxZmXzfW7ZQZgH1QowGogwGFZTAiKyBiJ9uqKu6HeIDLHjq3OlTVq29/+iI64G2QAtjWWuSaTgK/+uQ/B27rqcP+h/y1IgM8eaAmMAIKM7ErejeoUQDa3dLcw93sP0EeoxvUNIDQ76gM5FB1uro61AsVA7ATDG8I9y5yaVsf7XIAHuduBN95GxT4QsIA0IMNLdS5YoYxdWgPtdJknwDwcPdZfbU9fIGtGQM2kSgAZY9hnaE2mh5M0GSfA4Ae1IfYDZViF5wd90qGADCj8oTL5DEx1GzhwlLTAKgMrzAKOYj6kPNJvUAA1xMpVqwMHmqc5CUNYL+/+0LuqScyfBEDgOwZalQAb2rt4nbzRQZAGHqf1EOhmHrS7jhBgKnfUO4XUoTaqu6LLMDVhhx/j7r80VXZFUsNArQ1twtKRaidM2e50SAyABAA/N4qM3yx9PeKIACq0B7VGWr8wOtwf2WND7RHdQqiVBSK8lA2g3gABeD/FHFkHUNONgCvbqqjK0p7wQgCSGvvO9saZc9Zbu+hlgOg2/ufC+rvMHr4jabUNMC39QZ5iaiJIVOR3wAAAABJRU5ErkJggg==" alt="Slide QR Code" style="border: 2px solid var(--primary); border-radius: 8px; width: 75px; height: 75px; background: #fff;">
+                            <div id="slide-49-qr-box" style="margin-top: 10px; display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 12px; border: 1px solid var(--glass-border);">
+                                <img id="slide-49-qr-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6AQMAAACyIsh+AAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB+UlEQVRogeWZsa3DMAxEaaRw6REyikeTRvMoHiGlC8MM7ygp/h8fSP1JdRKeG+aORyki31ZRrEOWl23WiqPHOdue51qjADw6Zn09eaDYqr6WnUVIBKieDxZmXzfW7ZQZgH1QowGogwGFZTAiKyBiJ9uqKu6HeIDLHjq3OlTVq29/+iI64G2QAtjWWuSaTgK/+uQ/B27rqcP+h/y1IgM8eaAmMAIKM7ErejeoUQDa3dLcw93sP0EeoxvUNIDQ76gM5FB1uro61AsVA7ATDG8I9y5yaVsf7XIAHuduBN95GxT4QsIA0IMNLdS5YoYxdWgPtdJknwDwcPdZfbU9fIGtGQM2kSgAZY9hnaE2mh5M0GSfA4Ae1IfYDZViF5wd90qGADCj8oTL5DEx1GzhwlLTAKgMrzAKOYj6kPNJvUAA1xMpVqwMHmqc5CUNYL+/+0LuqScyfBEDgOwZalQAb2rt4nbzRQZAGHqf1EOhmHrS7jhBgKnfUO4XUoTaqu6LLMDVhhx/j7r80VXZFUsNArQ1twtKRaidM2e50SAyABAA/N4qM3yx9PeKIACq0B7VGWr8wOtwf2WND7RHdQqiVBSK8lA2g3gABeD/FHFkHUNONgCvbqqjK0p7wQgCSGvvO9saZc9Zbu+hlgOg2/ufC+rvMHr4jabUNMC39QZ5iaiJIVOR3wAAAABJRU5ErkJggg==" alt="Slide QR Code" style="border: 2px solid var(--primary); border-radius: 8px; width: 75px; height: 75px; background: #fff;">
                                 <div style="font-size: 0.75rem; color: var(--text-gray);">
                                     <p style="font-weight: 700; color: var(--secondary); margin-bottom: 2px;">📱 手機掃碼同步互動：</p>
-                                    <p>掃碼即可在手機上同步開啟簡報進行模擬表決、文字雲發言與證書取得！</p>
+                                    <p>掃碼即可在手機上同步開啟簡報進行模擬表決與互動文字雲！</p>
+                                </div>
+                            </div>
+                            <!-- Student Connect Box -->
+                            <div id="student-connect-box" style="margin-top: 10px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; border: 1px solid var(--glass-border); display: none;">
+                                <label style="font-size: 0.8rem; color: var(--secondary); font-weight: 700; display: block; margin-bottom: 4px;">🔗 連接教師的課堂文字雲：</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <input type="text" id="join-code-input" placeholder="請輸入6位連接碼" style="flex: 1; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.2); color: white; font-size: 0.85rem;" maxlength="8">
+                                    <button onclick="joinClass()" style="padding: 6px 12px; border-radius: 6px; border: none; background: var(--primary); color: #0b132b; font-weight: 700; cursor: pointer; font-size: 0.85rem;">連線</button>
                                 </div>
                             </div>
                         </div>
@@ -1442,10 +1451,13 @@
     <div id="qr-modal-overlay" class="modal-overlay" onclick="closeQRModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="modal-close-btn" onclick="closeQRModal()">✕</button>
-            <h3 style="color: var(--secondary); margin-bottom: 12px; font-size: 1.1rem; text-align: center;">📱 掃碼加入手機互動共讀</h3>
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6AQMAAACyIsh+AAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB+UlEQVRogeWZsa3DMAxEaaRw6REyikeTRvMoHiGlC8MM7ygp/h8fSP1JdRKeG+aORyki31ZRrEOWl23WiqPHOdue51qjADw6Zn09eaDYqr6WnUVIBKieDxZmXzfW7ZQZgH1QowGogwGFZTAiKyBiJ9uqKu6HeIDLHjq3OlTVq29/+iI64G2QAtjWWuSaTgK/+uQ/B27rqcP+h/y1IgM8eaAmMAIKM7ErejeoUQDa3dLcw93sP0EeoxvUNIDQ76gM5FB1uro61AsVA7ATDG8I9y5yaVsf7XIAHuduBN95GxT4QsIA0IMNLdS5YoYxdWgPtdJknwDwcPdZfbU9fIGtGQM2kSgAZY9hnaE2mh5M0GSfA4Ae1IfYDZViF5wd90qGADCj8oTL5DEx1GzhwlLTAKgMrzAKOYj6kPNJvUAA1xMpVqwMHmqc5CUNYL+/+0LuqScyfBEDgOwZalQAb2rt4nbzRQZAGHqf1EOhmHrS7jhBgKnfUO4XUoTaqu6LLMDVhhx/j7r80VXZFUsNArQ1twtKRaidM2e50SAyABAA/N4qM3yx9PeKIACq0B7VGWr8wOtwf2WND7RHdQqiVBSK8lA2g3gABeD/FHFkHUNONgCvbqqjK0p7wQgCSGvvO9saZc9Zbu+hlgOg2/ufC+rvMHr4jabUNMC39QZ5iaiJIVOR3wAAAABJRU5ErkJggg==" alt="Slide QR Code" style="border: 4px solid var(--primary); border-radius: 16px; width: 200px; height: 200px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); background: #fff; display: block; margin: 0 auto 12px;">
-            <p style="font-size: 0.8rem; color: var(--text-gray); text-align: center; max-width: 250px; margin: 0 auto; line-height: 1.4;">
-                在大螢幕投影此畫面，學生使用手機或平板掃描，即可同步加入表決與文字雲互動！
+            <h3 style="color: var(--secondary); margin-bottom: 8px; font-size: 1.1rem; text-align: center;">📱 掃碼加入手機互動共讀</h3>
+            <img id="modal-qr-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6AQMAAACyIsh+AAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB+UlEQVRogeWZsa3DMAxEaaRw6REyikeTRvMoHiGlC8MM7ygp/h8fSP1JdRKeG+aORyki31ZRrEOWl23WiqPHOdue51qjADw6Zn09eaDYqr6WnUVIBKieDxZmXzfW7ZQZgH1QowGogwGFZTAiKyBiJ9uqKu6HeIDLHjq3OlTVq29/+iI64G2QAtjWWuSaTgK/+uQ/B27rqcP+h/y1IgM8eaAmMAIKM7ErejeoUQDa3dLcw93sP0EeoxvUNIDQ76gM5FB1uro61AsVA7ATDG8I9y5yaVsf7XIAHuduBN95GxT4QsIA0IMNLdS5YoYxdWgPtdJknwDwcPdZfbU9fIGtGQM2kSgAZY9hnaE2mh5M0GSfA4Ae1IfYDZViF5wd90qGADCj8oTL5DEx1GzhwlLTAKgMrzAKOYj6kPNJvUAA1xMpVqwMHmqc5CUNYL+/+0LuqScyfBEDgOwZalQAb2rt4nbzRQZAGHqf1EOhmHrS7jhBgKnfUO4XUoTaqu6LLMDVhhx/j7r80VXZFUsNArQ1twtKRaidM2e50SAyABAA/N4qM3yx9PeKIACq0B7VGWr8wOtwf2WND7RHdQqiVBSK8lA2g3gABeD/FHFkHUNONgCvbqqjK0p7wQgCSGvvO9saZc9Zbu+hlgOg2/ufC+rvMHr4jabUNMC39QZ5iaiJIVOR3wAAAABJRU5ErkJggg==" alt="Slide QR Code" style="border: 4px solid var(--primary); border-radius: 16px; width: 180px; height: 180px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); background: #fff; display: block; margin: 0 auto 8px;">
+            <p style="font-size: 1.05rem; font-weight: bold; color: var(--secondary); text-align: center; margin-bottom: 10px;">
+                🔑 課堂連接碼：<span id="modal-session-code" style="color: var(--primary); font-family: monospace; letter-spacing: 1px;">載入中...</span>
+            </p>
+            <p style="font-size: 0.78rem; color: var(--text-gray); text-align: center; max-width: 250px; margin: 0 auto; line-height: 1.4;">
+                在手機上掃描此二維碼，或者在首頁/文字雲中輸入「連接碼」，即可同步進行表決與共享文字雲！
             </p>
         </div>
     </div>

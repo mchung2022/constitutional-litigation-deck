@@ -389,24 +389,27 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 300);
     };
 
-    // --- INTERACTIVE WORD CLOUD CONTROLLER ---
-    window.addNewWord = function() {
-        const wordInput = document.getElementById("word-input");
-        if (!wordInput) return;
-        const wordText = wordInput.value.trim();
-        if (!wordText) return;
-        
+    // --- INTERACTIVE WORD CLOUD CONTROLLER & REAL-TIME SYNC ---
+    const urlParams = new URLSearchParams(window.location.search);
+    let binId = urlParams.get("bin");
+    let isStudentMode = !!binId;
+    let renderedWords = new Set(["人權保障", "權力制衡", "正當程序", "武器平等", "裁判審查", "第四審", "言論自由"]);
+
+    // Expose add word to element locally
+    function addWordToCloudElement(wordText) {
         const container = document.getElementById("word-cloud-container");
         if (!container) return;
         
-        const newWordSpan = document.createElement("span");
+        // Prevent duplicate local rendering
+        const existingSpans = container.querySelectorAll(".cloud-word");
+        for (let span of existingSpans) {
+            if (span.textContent.trim() === wordText) return;
+        }
         
-        // Curated set of neon highlight colors for modern aesthetic
+        const newWordSpan = document.createElement("span");
         const colors = ["var(--primary)", "var(--secondary)", "var(--accent)", "var(--forest-green)", "#e2eafc", "#b5e2fa", "#ffc6ff", "#bdb2ff"];
         const randomColor = colors[Math.floor(Math.random() * colors.length)];
         const randomFontSize = (0.9 + Math.random() * 0.8).toFixed(2) + "rem";
-        
-        // Boundary aware random float positions
         const randomTop = Math.floor(12 + Math.random() * 72) + "%";
         const randomLeft = Math.floor(6 + Math.random() * 75) + "%";
         
@@ -419,13 +422,165 @@ document.addEventListener("DOMContentLoaded", () => {
         newWordSpan.textContent = wordText;
         
         container.appendChild(newWordSpan);
+        playSynthSound(680, "sine", 0.07); // pop sound
+    }
+
+    // Expose global add new word handler
+    window.addNewWord = function() {
+        const wordInput = document.getElementById("word-input");
+        if (!wordInput) return;
+        const wordText = wordInput.value.trim();
+        if (!wordText) return;
+        
+        // Render locally
+        addWordToCloudElement(wordText);
         wordInput.value = "";
         
-        // Synthesis a soft popping bubble sound
-        playSynthSound(680, "sine", 0.07);
+        // If in student or teacher synced mode, push to database!
+        if (binId) {
+            fetch("https://extendsclass.com/api/json-storage/bin/" + binId)
+            .then(res => res.json())
+            .then(resData => {
+                let data = resData;
+                if (resData.data) {
+                    try { data = JSON.parse(resData.data); } catch(e) { data = resData.data; }
+                }
+                let wordsArr = (data && data.words && Array.isArray(data.words)) ? data.words : [];
+                if (!wordsArr.includes(wordText)) {
+                    wordsArr.push(wordText);
+                    
+                    // Save back to bin
+                    fetch("https://extendsclass.com/api/json-storage/bin/" + binId, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ words: wordsArr })
+                    })
+                    .then(r => r.json())
+                    .then(() => console.log("Synced word to cloud successfully!"))
+                    .catch(e => console.error("Sync write failed", e));
+                }
+            })
+            .catch(err => console.error("Sync read failed", err));
+        }
     };
 
-    // Event listener for pressing Enter inside the input box
+    // Polling function for Teacher/Projector screen
+    function pollClassWords() {
+        if (!binId) return;
+        fetch("https://extendsclass.com/api/json-storage/bin/" + binId)
+        .then(res => res.json())
+        .then(resData => {
+            let data = resData;
+            if (resData.data) {
+                try { data = JSON.parse(resData.data); } catch(e) { data = resData.data; }
+            }
+            if (data && data.words && Array.isArray(data.words)) {
+                data.words.forEach(word => {
+                    const trimmed = word.trim();
+                    if (trimmed && !renderedWords.has(trimmed)) {
+                        renderedWords.add(trimmed);
+                        addWordToCloudElement(trimmed);
+                    }
+                });
+            }
+        })
+        .catch(err => console.log("Sync polling error", err));
+    }
+
+    // Join Class function for students joining manually
+    window.joinClass = function() {
+        const codeInput = document.getElementById("join-code-input");
+        if (!codeInput) return;
+        const code = codeInput.value.trim().toLowerCase();
+        if (!code || code.length < 5) {
+            alert("請輸入正確的課堂連接碼！");
+            return;
+        }
+        playSynthSound(500, "sine", 0.05);
+        window.location.search = "?bin=" + code;
+    };
+
+    // Main session lifecycle initialization
+    function initializeSession() {
+        const codeDisplay = document.getElementById("session-code-display");
+        const codeSpan = document.getElementById("session-code-span");
+        const modalCodeSpan = document.getElementById("modal-session-code");
+        
+        if (isStudentMode) {
+            // Student Mode UI adaptations
+            if (codeDisplay) {
+                codeDisplay.style.display = "flex";
+                codeDisplay.title = "已同步連線至教師課堂";
+                codeSpan.textContent = "✔ 已連線課堂: " + binId;
+            }
+            const slide49QrBox = document.getElementById("slide-49-qr-box");
+            if (slide49QrBox) slide49QrBox.style.display = "none";
+            
+            // Start polling as well to show other students' submissions!
+            setInterval(pollClassWords, 3000);
+        } else {
+            // Teacher Mode UI setup
+            if (codeDisplay) {
+                codeDisplay.style.display = "flex";
+                codeSpan.textContent = binId;
+            }
+            if (modalCodeSpan) modalCodeSpan.textContent = binId;
+            
+            // Expose Student Join Code Box on teacher screen just in case a student opens solo
+            const connectBox = document.getElementById("student-connect-box");
+            if (connectBox) connectBox.style.display = "block";
+            
+            // Update all dynamic QR Code images pointing to the exact student URL with bin ID!
+            const studentUrl = "https://mchung2022.github.io/constitutional-litigation-deck/?bin=" + binId;
+            const qrApiUrl = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" + encodeURIComponent(studentUrl);
+            
+            const slide1Qr = document.getElementById("slide-1-qr-img");
+            const slide49Qr = document.getElementById("slide-49-qr-img");
+            const modalQr = document.getElementById("modal-qr-img");
+            
+            if (slide1Qr) slide1Qr.src = qrApiUrl;
+            if (slide49Qr) slide49Qr.src = qrApiUrl;
+            if (modalQr) modalQr.src = qrApiUrl;
+            
+            // Start polling student updates every 3 seconds!
+            setInterval(pollClassWords, 3000);
+        }
+    }
+
+    // Set up class sync session
+    if (isStudentMode) {
+        initializeSession();
+    } else {
+        // Teacher Mode: check local cache or fetch fresh session bin
+        let cachedBinId = localStorage.getItem("class_bin_id");
+        if (cachedBinId) {
+            binId = cachedBinId;
+            initializeSession();
+        } else {
+            // POST to ExtendsClass to obtain a fresh anonymous JSON storage bin
+            fetch("https://extendsclass.com/api/json-storage/bin", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ words: ["人權保障", "權力制衡", "正當程序", "武器平等", "裁判審查", "第四審", "言論自由"] })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.id) {
+                    binId = data.id;
+                    localStorage.setItem("class_bin_id", binId);
+                    initializeSession();
+                }
+            })
+            .catch(err => {
+                console.error("Failed to bootstrap extendsclass session", err);
+                // Fallback to static offline mode
+                binId = "fefaecd"; 
+                initializeSession();
+            });
+        }
+    }
+
+    // Event listener for pressing Enter inside the word input box
     setTimeout(() => {
         const wordInput = document.getElementById("word-input");
         if (wordInput) {

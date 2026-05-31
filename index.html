@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>憲法訴訟法大師級素養簡報</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 </head>
 <body>
     <div id="app-container">
@@ -41,7 +42,7 @@
                         </div>
                         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); padding: 25px; border-radius: 20px; box-shadow: var(--shadow);">
                             <p style="font-size: 0.95rem; font-weight: 700; color: var(--secondary); margin-bottom: 12px; text-align: center;">📱 課堂互動！手機掃碼同步共讀：</p>
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://mchung2022.github.io/constitutional-litigation-deck/&color=0b132b&bgcolor=ffffff" alt="Slide QR Code" style="border: 4px solid var(--primary); border-radius: 16px; width: 150px; height: 150px; box-shadow: 0 4px 20px rgba(72,202,228,0.3);">
+                            <canvas class="qr-canvas" style="border: 4px solid var(--primary); border-radius: 16px; width: 150px; height: 150px; box-shadow: 0 4px 20px rgba(72,202,228,0.3); background: #fff;"></canvas>
                             <p style="font-size: 0.8rem; color: var(--text-gray); margin-top: 10px; text-align: center;">掃碼即可用手機投票、參與文字雲與獲取證書</p>
                         </div>
                     </div>
@@ -1341,7 +1342,7 @@
                                 </p>
                             </div>
                             <div style="margin-top: 10px; display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 12px; border: 1px solid var(--glass-border);">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://mchung2022.github.io/constitutional-litigation-deck/&color=0b132b&bgcolor=ffffff" alt="Slide QR Code" style="border: 2px solid var(--primary); border-radius: 8px; width: 75px; height: 75px;">
+                                <canvas class="qr-canvas" style="border: 2px solid var(--primary); border-radius: 8px; width: 75px; height: 75px; background: #fff;"></canvas>
                                 <div style="font-size: 0.75rem; color: var(--text-gray);">
                                     <p style="font-weight: 700; color: var(--secondary); margin-bottom: 2px;">📱 手機掃碼同步互動：</p>
                                     <p>掃碼即可在手機上同步開啟簡報進行模擬表決、文字雲發言與證書取得！</p>

@@ -436,6 +436,25 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     }, 500);
+
+    // --- OFFLINE CLIENT-SIDE QR CODE GENERATION ---
+    setTimeout(() => {
+        try {
+            const qrCanvases = document.querySelectorAll(".qr-canvas");
+            qrCanvases.forEach(canvas => {
+                new QRious({
+                    element: canvas,
+                    value: "https://mchung2022.github.io/constitutional-litigation-deck/",
+                    size: 200,
+                    background: "#ffffff",
+                    foreground: "#0b132b",
+                    level: "H"
+                });
+            });
+        } catch (err) {
+            console.error("QR generation error", err);
+        }
+    }, 600);
     
     updateSlides();
 });

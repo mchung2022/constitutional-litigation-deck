@@ -15,6 +15,7 @@
                 <div class="scoreboard-widget" id="scoreboard" title="素養挑戰回答進度">⭐ 答題: <span id="score-count">0 / 3</span></div>
                 <button class="icon-control-btn" id="theme-toggle-btn" title="切換明暗主題">🌓</button>
                 <button class="icon-control-btn" id="sound-toggle-btn" title="切換音效模式">🔊</button>
+                <button class="menu-toggle-btn" onclick="openQRModal()" style="border-color: var(--secondary); color: var(--secondary); margin-right: 5px;">📱 課堂掃碼</button>
                 <div class="unit-title-display">載入中...</div>
                 <button class="menu-toggle-btn">☰ 課程地圖</button>
             </div>
@@ -1435,6 +1436,18 @@
                 <li data-slide="48">📌 單元七：公民素養總結與證書</li>
             </ul>
         </nav>
+    </div>
+
+    <!-- QR Code Popup Modal -->
+    <div id="qr-modal-overlay" class="modal-overlay" onclick="closeQRModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="closeQRModal()">✕</button>
+            <h3 style="color: var(--secondary); margin-bottom: 12px; font-size: 1.1rem; text-align: center;">📱 掃碼加入手機互動共讀</h3>
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6AQMAAACyIsh+AAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB+UlEQVRogeWZsa3DMAxEaaRw6REyikeTRvMoHiGlC8MM7ygp/h8fSP1JdRKeG+aORyki31ZRrEOWl23WiqPHOdue51qjADw6Zn09eaDYqr6WnUVIBKieDxZmXzfW7ZQZgH1QowGogwGFZTAiKyBiJ9uqKu6HeIDLHjq3OlTVq29/+iI64G2QAtjWWuSaTgK/+uQ/B27rqcP+h/y1IgM8eaAmMAIKM7ErejeoUQDa3dLcw93sP0EeoxvUNIDQ76gM5FB1uro61AsVA7ATDG8I9y5yaVsf7XIAHuduBN95GxT4QsIA0IMNLdS5YoYxdWgPtdJknwDwcPdZfbU9fIGtGQM2kSgAZY9hnaE2mh5M0GSfA4Ae1IfYDZViF5wd90qGADCj8oTL5DEx1GzhwlLTAKgMrzAKOYj6kPNJvUAA1xMpVqwMHmqc5CUNYL+/+0LuqScyfBEDgOwZalQAb2rt4nbzRQZAGHqf1EOhmHrS7jhBgKnfUO4XUoTaqu6LLMDVhhx/j7r80VXZFUsNArQ1twtKRaidM2e50SAyABAA/N4qM3yx9PeKIACq0B7VGWr8wOtwf2WND7RHdQqiVBSK8lA2g3gABeD/FHFkHUNONgCvbqqjK0p7wQgCSGvvO9saZc9Zbu+hlgOg2/ufC+rvMHr4jabUNMC39QZ5iaiJIVOR3wAAAABJRU5ErkJggg==" alt="Slide QR Code" style="border: 4px solid var(--primary); border-radius: 16px; width: 200px; height: 200px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); background: #fff; display: block; margin: 0 auto 12px;">
+            <p style="font-size: 0.8rem; color: var(--text-gray); text-align: center; max-width: 250px; margin: 0 auto; line-height: 1.4;">
+                在大螢幕投影此畫面，學生使用手機或平板掃描，即可同步加入表決與文字雲互動！
+            </p>
+        </div>
     </div>
 
     <script src="app.js"></script>

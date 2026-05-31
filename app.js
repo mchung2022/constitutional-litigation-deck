@@ -436,6 +436,23 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     }, 500);
+
+    // --- QR CODE POPUP MODAL CONTROLLER ---
+    window.openQRModal = function() {
+        const modal = document.getElementById("qr-modal-overlay");
+        if (modal) {
+            modal.classList.add("open");
+            playSynthSound(500, "sine", 0.08); // high chime sound
+        }
+    };
+    
+    window.closeQRModal = function() {
+        const modal = document.getElementById("qr-modal-overlay");
+        if (modal) {
+            modal.classList.remove("open");
+            playSynthSound(400, "sine", 0.06); // soft confirmation tone
+        }
+    };
     
     updateSlides();
 });
